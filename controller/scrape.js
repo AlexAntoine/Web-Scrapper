@@ -1,7 +1,7 @@
-const puppeteer = rquire('puppeteer');
+const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 
-exports.scrapeData = async(url,page)=>{
+const scrapeData = async(url,page)=>{
 
     try {
         await page.goto(url, {waitUntil:'load', timeout:0});
