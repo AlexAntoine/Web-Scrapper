@@ -26,6 +26,7 @@ exports.getResults = async()=>{
     const page = await browser.newPage();
 
    const data = await scrapeData('https://en.wikipedia.org/wiki/Computer_programming',page);
+   browser.close();
 
    console.log(data.title);
 }
