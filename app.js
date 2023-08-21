@@ -16,8 +16,10 @@ app.get('/search', (req, res)=>{
 
 app.get('/results',async(req, res)=>{
     const url = req.query.search;
+    // console.log(url);
 
     const data = await getResults(url)
+    console.log(data);
 
     res.render('results',{data:data});
 })
@@ -31,18 +33,41 @@ const scrapeData = async(url,page)=>{
 
         const $ = cheerio.load(html);
 
-        const title = $('#original_header > div.header_poster_wrapper.false > section > div.title.ott_false > h2 > a').text();
-        const releaseDate = $('#original_header > div.header_poster_wrapper.false > section > div.title.ott_false > h2 > span').text();
-        const overview = $('<p>After reuniting with Gwen Stacy, Brooklyn’s full-time, friendly neighborhood Spider-Man is catapulted across the Multiverse, where he encounters the Spider Society, a team of Spider-People charged with protecting the Multiverse’s very existence. But when the heroes clash on how to handle a new threat, Miles finds himself pitted against the other Spiders and must set out on his own to save those he loves most.</p>').text();
-        const score = $('.user_score_chart').attr('data-percent');
-        const imgUrl = $('<img class="poster lazyload lazyloaded" src="/t/p/w300_and_h450_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" data-src="/t/p/w300_and_h450_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" data-srcset="/t/p/w300_and_h450_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg 1x, /t/p/w600_and_h900_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg 2x" alt="Spider-Man: Across the Spider-Verse" srcset="/t/p/w300_and_h450_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg 1x, /t/p/w600_and_h900_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg 2x" data-loaded="true">').attr('src');
+        const title = $('#original_header > div.header_poster_wrapper.true > section > div.title.ott_true > h2 > a').text();
+
+        const releaseDate = $('#original_header > div.header_poster_wrapper.true > section > div.title.ott_true > h2 > span').text();
+
+        const overview = $('#original_header > div.header_poster_wrapper.true > section > div.header_info > div > p').text();
+
+        const score = $('#original_header > div.header_poster_wrapper.true > section > ul > li.chart > div.consensus.details > div > div').attr('data-percent');
+
+        const imgUrl = $('#original_header > div.poster_wrapper.true > div.poster > div.image_content.backdrop > img').attr('src');
+
+        const crewLength = $('div.header_info > ol > li').length;
+
+        let crew = [];
+
+        for(let i=1; i <= crewLength; i++){
+
+            let crewName = $(`div.header_info > ol > li:nth-child(${i}) > p:nth-child(1)`).text();
+
+            let crewRole = $(`div.header_info > ol > li:nth-child(${i}) > p.character`).text();
+
+            crew.push({
+                "name":crewName,
+                "role":crewRole
+            })
+        }
+       
         console.log('line 39: ', title);
+
         return {
             title,
             releaseDate,
             overview,
             score,
-            imgUrl
+            imgUrl,
+            crew
         }
 
     } catch (error) {
@@ -58,8 +83,9 @@ const getResults = async(url)=>{
    const data = await scrapeData(url,page);
 
    browser.close();
+
    return data;
-//    console.log(data.title);
+
 }
 
 

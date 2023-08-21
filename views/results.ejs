@@ -8,29 +8,31 @@
 </head>
 
 <body>
-    <h1 id="searchHeading">Search Result <span style="color: grey;">> </span></h1>
+    <h1 id="searchHeading">Search Result <span style="color: grey;">> </span><%=data["title"].toUpperCase()%></h1>
 
     <div class="card mb-5 w-75">
         <div class="row no-gutters">
             <div class="col-md-4">
-                <img src="" class="card-img img-fluid">
+                <img src="https://www.themoviedb.org/<%= data["imgUrl"] %>" class="card-img img-fluid">
             </div>
 
             <div class="col-md-8">
                 <div class="card-body">
-                    <h2 class="card-title"> <b> </b> </h2>
+                    <h2 class="card-title"> <b><%=data["title"] %></b> <%=data["releaseDate"] %></h2>
                     <hr>
                     <h4 class="mb-2">Overview:</h4>
-                    <p class="card-text"> Dude loses his GF to his best friend and then goes on to marry the former friend's mom. Sigma Move!</p>
+                    <p class="card-text"> <%=data["overview"] %></p>
 
                     <hr>
-                    <p class="card-text"> <b>User Score:</b> 8.9</p>
+                    <p class="card-text"> <b>User Score:</b> <%=data["score"] %>%</p>
                     <hr>
                     <h4 class="mb-3">Featured Crew:</h4>
 
-                    
-                    <p class="ml-2"> <b></b>Chicken Dinner</p>
+                    <%data["crew"].forEach((crew)=>{ %>
                         
+                        <p class="ml-2"> <b><%=crew.name%></b> (<%=crew.role%>)</p>
+                    <%})%>
+
                 </div>
             </div>
 
